@@ -10,6 +10,7 @@ Written by Sergio Sanchez
 
 from deck import Deck
 from hand import Hand
+from dealer import Dealer
 
 def printHand(hand):
 	print("\n")
@@ -17,23 +18,57 @@ def printHand(hand):
 		print(card)
 	print("Value = %d\n" % hand.getValue())
 
+# shuffle the deck
 deck = Deck().shuffled()
-hand = Hand()
 
-hand.deal(deck.popleft(),deck.popleft())
+# deal the cards
+myHand = Hand()
+myHand.deal(deck.popleft(),deck.popleft())
+dealer = Dealer(deck.popleft(),deck.popleft())
 
+# play my hand
 while True:
 
-	printHand(hand)
+	printHand(myHand)
 
-	if hand.getValue() < 17:
+	if myHand.getValue() < 17:
 		print("Hit me!")
-		hand.draw(deck.popleft())
+		myHand.draw(deck.popleft())
 
-	elif hand.getValue() <= 21:
+	elif myHand.getValue() <= 21:
 		print("Stay!")
 		break
 
-	elif hand.getValue() > 21:
-		print("Bust!")
+	elif myHand.getValue() > 21:
+		print("Bust! Dealer wins!")
+		exit()  # dealer wins on player bust
+
+# play Dealer's hand
+while True:
+
+	printHand(dealer.getHand())
+
+	if dealer.getHand().getValue() < 17:
+		print("Dealer hits!")
+		dealer.hit(deck.popleft())
+
+	elif dealer.getHand().getValue() <= 21:
+		print("Dealer stays!")
 		break
+
+	elif dealer.getHand().getValue() > 21:
+		print("Dealer bust! You win!")
+		exit() # player wins on dealer bust
+
+# compare hands
+myHandVal = myHand.getValue()
+dealerVal = dealer.getHandValue()
+print("You: %d -- Dealer: %d" % (myHandVal, dealerVal))
+if dealerVal > myHandVal:
+	print("Dealer wins!")
+
+elif dealerVal < myHandVal:
+	print("You win!")
+
+else:
+	print("Push...")
