@@ -20,7 +20,7 @@ class Hand:
 		self.hand.append(card)
 		self.value += card.blackjackValue()
 
-		if card.getRank() == 'Ace' and self.value < 12:
+		if card.getRank() == 'A' and self.value < 12:
 			self.softHand = True
 			self.value += 10     # evaluate with ace as 11
 

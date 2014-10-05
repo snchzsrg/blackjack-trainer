@@ -18,9 +18,9 @@ class Card:
 	 	return self.suit
 
 	 def blackjackValue(self):
-	 	if self.rank == 'Ace':
+	 	if self.rank == 'A':
 	 		return 1
-	 	elif self.rank == 'Jack' or self.rank == 'Queen' or self.rank == 'King':
+	 	elif self.rank == 'J' or self.rank == 'Q' or self.rank == 'K':
 	 		return 10
 	 	else:
 	 		return int(self.rank)
