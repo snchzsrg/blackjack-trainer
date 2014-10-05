@@ -1,9 +1,6 @@
 '''
 blackjack_sim.py
-	a simple simulator that
-	  - shuffles the deck
-	  - deals a hand
-	  - hits, stays, or busts based on the hand value
+	a blackjack simulator
 
 Written by Sergio Sanchez
 '''
@@ -11,6 +8,7 @@ Written by Sergio Sanchez
 from deck import Deck
 from hand import Hand
 from dealer import Dealer
+import strategy
 
 def printHand(hand):
 	print("\n")
