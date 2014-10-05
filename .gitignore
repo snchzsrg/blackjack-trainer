@@ -1,3 +1,5 @@
 # compiled, dll, and optimized files
 *.py[cdo]
 
+# sublime workspace files
+*.sublime-workspace
