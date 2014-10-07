@@ -20,7 +20,7 @@ class Card:
 	 def blackjackValue(self):
 	 	if self.rank == 'A':
 	 		return 1
-	 	elif self.rank == 'J' or self.rank == 'Q' or self.rank == 'K':
+	 	elif self.rank == 'T' or self.rank == 'J' or self.rank == 'Q' or self.rank == 'K':
 	 		return 10
 	 	else:
 	 		return int(self.rank)
