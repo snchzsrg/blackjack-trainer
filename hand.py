@@ -49,5 +49,8 @@ class Hand:
 	def isPair(self):
 		return self.pair
 
+	def numCards(self):
+		return len(self.hand)
+
 	def isBlackjack(self):
 		return self.blackjack

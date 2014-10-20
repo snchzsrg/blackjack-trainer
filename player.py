@@ -14,7 +14,7 @@ class Player:
 		self.hand.deal(card1,card2)
 		self.blackjack = False
 
-		if self.hand.getValue == 21:
+		if self.hand.getValue() == 21:
 			self.blackjack = True
 
 	def getHand(self):
@@ -23,5 +23,5 @@ class Player:
 	def hit(self, card):
 		self.hand.draw(card)
 
-	def isBlackjack(self):
+	def hasBlackjack(self):
 		return self.blackjack

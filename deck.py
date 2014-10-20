@@ -21,6 +21,11 @@ class Deck:
 				for rank in Rank:
 					self.deck.append(Card(rank,suit))
 
-	def shuffled(self):
+	def shuffle(self):
 		random.shuffle(self.deck)
-		return self.deck
+
+	def draw(self):
+		try:
+			return self.deck.popleft()
+		except IndexError:
+			print("Uh-oh! No cards left in the draw pile!")
