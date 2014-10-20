@@ -84,7 +84,7 @@ while True:
 
 # compare hands
 myHandVal = myHand.getValue()
-dealerVal = dealer.getHandValue()
+dealerVal = dealer.getHand().getValue()
 print("You: %d -- Dealer: %d" % (myHandVal, dealerVal))
 if dealerVal > myHandVal:
 	print("Dealer wins!")
