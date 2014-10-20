@@ -25,3 +25,8 @@ class Player:
 
 	def hasBlackjack(self):
 		return self.blackjack
+
+	def printHand(self):
+		for card in self.hand:
+			print(card)
+		print("Value = %d\n" % self.hand.getValue())

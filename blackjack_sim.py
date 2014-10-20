@@ -11,11 +11,74 @@ from dealer import Dealer
 from player import Player
 from strategy import *
 
-def printHand(playerHand):
-	print("\n")
-	for card in playerHand.getHand():
-		print(card)
-	print("Value = %d\n" % playerHand.getValue())
+# Define the possibile outcomes
+WIN = 0
+PUSH = WIN+1
+LOSS = PUSH+1
+BLKJK = LOSS+1
+
+
+class BlackjackSimulator:
+
+	def __init__(self,numOfRounds=1,numOfDecks=1):
+		self.numOfRounds = numOfRounds
+		self.numOfDecks = numOfDecks
+
+		self.wins = 0
+		self.pushes = 0
+		self.losses = 0
+		self.blackjacks = 0
+		self.roundsPlayed = 0
+
+		for _ in range(self.numOfRounds):
+
+			result = 0
+
+			if result == BLKJK:
+				self.wins += 1
+				self.blackjacks += 1
+
+			elif result == WIN:
+				self.wins += 1
+
+			elif result == PUSH:
+				self.pushes += 1
+
+			elif result == LOSS:
+				self.losses += 1
+
+			else:
+				print("INVALID RESULT -- %d" % result)
+				exit()
+
+			self.roundsPlayed += 1
+
+	def results(self):
+		# Print outcome
+		print("Rounds:\t%d" % self.numOfRounds)
+		print("  Wins:\t%d" % self.wins)
+		print("Pushes:\t%d" % self.pushes)
+		print("Losses:\t%d" % self.losses)
+		print("    BJ:\t%d" % self.blackjacks)
+
+	def getWins(self):
+		return self.wins
+
+	def getLosses(self):
+		return self.losses
+
+	def getPushes(self):
+		return self.pushes
+
+	def getBlackjacks(self):
+		return self.blackjacks
+
+	def getRoundsPlayed(self):
+		return self.roundsPlayed
+
+
+
+
 
 # shuffle the deck
 deck = Deck()
@@ -25,7 +88,7 @@ deck.shuffle()
 me = Player(deck.draw(),deck.draw())
 dealer = Dealer(deck.draw(),deck.draw())
 
-printHand(me.getHand())
+me.printHand()
 
 if me.hasBlackjack():
 	if dealer.hasBlackjack():
@@ -72,13 +135,13 @@ while True:
 		print("There's no reason to be here...")
 		break
 
-	printHand(me.getHand())
+	me.printHand()
 
 
 # play Dealer's hand
 while True:
 
-	printHand(dealer.getHand())
+	dealer.printHand()
 
 	if dealer.getHand().getValue() < 17:
 		print("Dealer hits!")
