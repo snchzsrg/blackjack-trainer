@@ -11,6 +11,10 @@ from dealer import Dealer
 from player import Player
 from strategy import *
 
+# RUNTIME OPTIONS
+NUMBER_OF_DECKS = 6
+NUMBER_OF_ROUNDS = 1000
+
 # Define the possibile outcomes
 WIN = 0
 PUSH = WIN+1
@@ -32,7 +36,7 @@ class BlackjackSimulator:
 
 		for _ in range(self.numOfRounds):
 
-			result = 0
+			result = self.playRound()
 
 			if result == BLKJK:
 				self.wins += 1
@@ -76,98 +80,93 @@ class BlackjackSimulator:
 	def getRoundsPlayed(self):
 		return self.roundsPlayed
 
+	def playRound(self):
+		# shuffle the decks
+		deck = Deck(self.numOfDecks)
+		deck.shuffle()
+
+		# deal the cards
+		me = Player(deck.draw(),deck.draw())
+		dealer = Dealer(deck.draw(),deck.draw())
+
+		# check for BLACKJACK!
+		if me.hasBlackjack():
+			if dealer.hasBlackjack():
+				return PUSH
+			else:
+				return BLKJK
+
+		# play my hand
+		while True:
+
+			handvalue = me.getHand().getValue()
+
+			if handvalue > 21:
+				return LOSS
+
+			elif me.getHand().isPair():
+				bestmove = basic_strategy_pair[dealer.openCardValue()][me.getHand().getHand()[0].getRank()]
+
+			elif me.getHand().isSoft():
+				bestmove = basic_strategy_soft[dealer.openCardValue()][handvalue-11]
+
+			else:
+				bestmove = basic_strategy_hard[dealer.openCardValue()][handvalue]
 
 
+			# ULTRA NINJA HACK:
+			#   until logic for a split is put in, reevaluate as a hard hand
+			if bestmove == SP:
+				if handvalue == 4: handvalue = 5
+				bestmove = basic_strategy_hard[dealer.openCardValue()][handvalue]
 
+			if bestmove == H or bestmove == Dh or bestmove == Sh:
+				me.hit(deck.draw())
 
-# shuffle the deck
-deck = Deck()
-deck.shuffle()
+			elif bestmove == S or bestmove == Ds:
+				break  # stand
 
-# deal the cards
-me = Player(deck.draw(),deck.draw())
-dealer = Dealer(deck.draw(),deck.draw())
+			else:
+				print("There's no reason to be here!")
+				exit()
 
-me.printHand()
+		# play dealer's hand
+		while True:
+			handvalue = dealer.getHand().getValue()
 
-if me.hasBlackjack():
-	if dealer.hasBlackjack():
-		print("Both you and dealer have blackjack... Push...")
-	else:
-		print("BLACKJACK!")
-		exit()
+			if handvalue < 17:
+				dealer.hit(deck.draw())
 
-print("Dealer shows %s" % dealer.openCardValue())
+			elif handvalue <= 21:
+				break  # stand
 
-# play my hand
-while True:
+			elif handvalue > 21:
+				return WIN  # dealer
 
-	if me.getHand().getValue() > 21:
-		print("Bust! Dealer wins!")
-		exit()  # dealer wins on player bust
+			else:
+				print("There's no reason to be here!")
+				exit()
 
-	elif me.getHand().isPair():
-		bestmove = basic_strategy_pair[dealer.openCardValue()][me.getHand().getHand()[0].getRank()]
+		# compare hands
+		myValue = me.getHand().getValue()
+		dealerValue = dealer.getHand().getValue()
 
-	elif me.getHand().isSoft():
-		bestmove = basic_strategy_soft[dealer.openCardValue()][me.getHand().getValue()-11]
+		if dealerValue > myValue:
+			return LOSS
 
-	else:
-		bestmove = basic_strategy_hard[dealer.openCardValue()][me.getHand().getValue()]
+		elif dealerValue < myValue:
+			return WIN
 
-	print("My best move is %s" % BESTPLAY[bestmove])
+		elif dealerValue == myValue:
+			return PUSH
 
+		else:
+			print("There's no reason to be here!")
+			exit()
 
-	# Until logic for a split is put in, reevaluate as hard hand:
-	if bestmove == SP:
-		bestmove = basic_strategy_hard[dealer.openCardValue()][me.getHand().getValue()]
+def main(numOfRounds=1,numOfDecks=1):
+	bjsim = BlackjackSimulator(numOfRounds,numOfDecks)
+	bjsim.results()
 
-
-	if bestmove == H or bestmove == Dh or bestmove == Sh:
-		print("Hit me!")
-		me.hit(deck.draw())
-
-	elif bestmove == S or bestmove == Ds:
-		print("Stand!")
-		break
-
-	else:
-		print("There's no reason to be here...")
-		break
-
-	me.printHand()
-
-
-# play Dealer's hand
-while True:
-
-	dealer.printHand()
-
-	if dealer.getHand().getValue() < 17:
-		print("Dealer hits!")
-		dealer.hit(deck.draw())
-
-	elif dealer.getHand().getValue() <= 21:
-		print("Dealer Stands!")
-		break
-
-	elif dealer.getHand().getValue() > 21:
-		print("Dealer bust! You win!")
-		exit() # player wins on dealer bust
-
-	else:
-		print("There's no reason to be here...")
-		break
-
-# compare hands
-myHandVal = me.getHand().getValue()
-dealerVal = dealer.getHand().getValue()
-print("You: %d -- Dealer: %d" % (myHandVal, dealerVal))
-if dealerVal > myHandVal:
-	print("Dealer wins!")
-
-elif dealerVal < myHandVal:
-	print("You win!")
-
-else:
-	print("Push...")
+if __name__ == "__main__":
+	main(NUMBER_OF_ROUNDS,NUMBER_OF_DECKS)
