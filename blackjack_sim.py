@@ -43,7 +43,7 @@ while True:
 		print("Bust! Dealer wins!")
 		exit()  # dealer wins on player bust
 
-	elif me.getHand().isPair() and me.getHand().numCards() == 2:
+	elif me.getHand().isPair():
 		bestmove = basic_strategy_pair[dealer.openCardValue()][me.getHand().getHand()[0].getRank()]
 
 	elif me.getHand().isSoft():

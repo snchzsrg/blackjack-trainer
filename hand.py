@@ -47,10 +47,9 @@ class Hand:
 		return self.softHand
 
 	def isPair(self):
-		return self.pair
-
-	def numCards(self):
-		return len(self.hand)
+		if( len(self.hand) == 2 ):
+			return self.pair
+		return False
 
 	def isBlackjack(self):
 		return self.blackjack
